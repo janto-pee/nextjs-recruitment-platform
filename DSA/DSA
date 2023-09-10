@@ -127,6 +127,7 @@ function longest_substring_with_k_distinct(str, k) {
     if (!(rightChar in charFrequency)) {
       charFrequency[rightChar] = 0;
     }
+    charFrequency[rightChar] += 1
       while(Object.keys(charFrequency).length > K){
         const leftChar = str[windowStart]
         charFrequency[leftChar] -= 1

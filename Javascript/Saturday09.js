@@ -16,10 +16,11 @@ function longest_substring_with_k_distinct(str, K) {
     for (let windowEnd = 0; windowEnd < str.length; windowEnd++) {
       const rightChar = str[windowEnd];
       console.log(rightChar)
-      
+
       if (!(rightChar in charFrequency)) {
         charFrequency[rightChar] = 0;
       }
+      charFrequency[rightChar] += 1
       console.log(charFrequency)
 
         while(Object.keys(charFrequency).length > K){
