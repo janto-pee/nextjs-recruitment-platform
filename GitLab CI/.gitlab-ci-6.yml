@@ -1,0 +1,40 @@
+# Deploy to S3
+# First setup s3 
+
+stages:
+  - build
+  - test
+  - deploy
+
+build website:
+  images: node:16-alpine
+  stages: build
+  script:
+    - yarn install
+    - yarn lint
+    - yarn test
+    - yarn build
+  artifacts:
+    paths:
+      - build
+
+test website:
+  images: node:16-alpine
+  stages: test
+  scripts:
+    - yarn global add serve
+    - apk add curl
+    - serve -s build &
+    - sleep 10
+    - curl http://localhost:3000 | grep "React App"     #grep download the page cource
+
+deploy to s3:
+  stages: deploy
+  images: 
+    name: amazon/aws-cli:2.4.2
+    entrypoint: [""]
+  scripts:
+    - aws --version
+    - echo "Helo S3" >> test.txt
+    - aws s3 cp test.txt s3://$AWS_S3_BUCKET/test.txt    #check Destination in S3 bucket created and create env variable in gitlab
+                                                         #we need to setup s3 services and add aws s3 variables e.g ACCESS KEY, DEFAULT REGION, S3 BUCKET, SECRET ACCESS to gitab

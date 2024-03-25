@@ -1,0 +1,26 @@
+# using variables
+
+stages:
+  - build
+  - test
+
+variables:
+  BUILD_FILE_NAME: laptop.txt
+
+build laptop:
+  image: alpine
+  stage: build
+  script: 
+    - echo "Buildinga laptop"
+    - mkdir build
+    - touch build/computer.txt
+    - echo "Mainboard" >> build/$BUILD_FILE_NAME
+    - cat build/computer.txt
+    - echo "Keyboard" >> build/$BUILD_FILE_NAME
+    - cat build/$BUILD_FILE_NAME
+
+test laptop:
+  image: alpine
+  stage: test
+  script:
+    - test -f build/$BUILD_FILE_NAME

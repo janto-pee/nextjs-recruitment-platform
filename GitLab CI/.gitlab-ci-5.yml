@@ -1,0 +1,81 @@
+# Feature Branch & Merging
+# Helps to mitigate breaking the main branch
+
+# Gitlab >> settings(LSB) >> General >> Merge Request >> Fast Forward; Encourage squashing commit; merge checks -pipeline succeed; 
+# Repository >> proteted branches >> allowed to push (main) >> no one;
+
+# stages:
+#   - .pre
+#   - build
+#   - test
+
+# build website:
+#   images: node:16-alpine
+#   stages: build
+#   script:
+#     - yarn install
+#     - yarn build
+#   artifacts:
+#     paths:
+#       - build
+
+# linter:
+#   images: node:16-alpine
+#   stages: .pre
+#   scripts:
+#     - yarn install
+#     - yarn lint
+
+# test website:
+#   images: alpine
+#   stages: test
+#   scripts:
+#     - test -f build/index.html
+
+# unit test:
+#   images: node:16-alpine
+#   stages: .pre
+#   scripts:
+#     - yarn install
+#     - yarn test
+
+
+
+stages:
+  - .pre
+  - build
+  - test
+
+build website:
+  images: node:16-alpine
+  stages: build
+  script:
+    - yarn install
+    - yarn build
+  artifacts:
+    paths:
+      - build
+
+linter:
+  images: node:16-alpine
+  stages: .pre
+  scripts:
+    - yarn install
+    - yarn lint
+
+test website:
+  images: node:16-alpine
+  stages: test
+  scripts:
+    - yarn global add serve
+    - apk add curl
+    - serve -s build &
+    - sleep 10
+    - curl http://localhost:3000 | grep "React App"     #grep download the page cource
+
+unit test:
+  images: node:16-alpine
+  stages: .pre
+  scripts:
+    - yarn install
+    - yarn test

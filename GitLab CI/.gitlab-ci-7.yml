@@ -1,0 +1,43 @@
+# Deploy to S3
+# First setup s3 
+
+stages:
+  - build
+  - test
+  - deploy
+
+build website:
+  images: node:16-alpine
+  stages: build
+  script:
+    - yarn install
+    - yarn lint
+    - yarn test
+    - yarn build
+  artifacts:
+    paths:
+      - build
+
+test website:
+  images: node:16-alpine
+  stages: test
+  scripts:
+    - yarn global add serve
+    - apk add curl
+    - serve -s build &
+    - sleep 10
+    - curl http://localhost:3000 | grep "React App"     #grep download the page cource
+
+deploy to s3:
+  stages: deploy
+  images: 
+    name: amazon/aws-cli:2.4.2
+    entrypoint: [""]
+  rules:
+    - if: $CI_COMMIT_BRANCH_NAME == $CI_DEFAULT_BRANCH    #using gitlab variable
+  scripts:
+    - aws --version
+    - $CI_COMMIT_BRANCH_NAME    #for debugging purposes to see the gitlab variable, nothing serious
+    - aws s3 sync build s3://$AWS_S3_BUCKET --delete    #set up static web hosting s3, also add permissions to get everything in a bucket
+
+    # This pipeline will be triggered on commit but wont deploy to production. It will only deploy to prod on merge request

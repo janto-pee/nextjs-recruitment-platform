@@ -1,0 +1,62 @@
+# a) Create new environment in GITLAB Deployment (LSB); -production, - staging
+# b) Edit all environment variables to add eaach environment
+# c) no need to add the variable section under stages
+# d) now add the enviroment section into stages where necessary
+
+stages:
+  - build
+  - test
+  - deploy staging
+  - deploy production
+
+build website:
+  images: node:16-alpine
+  stages: build
+  script:
+    - yarn install
+    - yarn lint
+    - yarn test
+    - yarn build
+  artifacts:
+    paths:
+      - build
+
+test website:
+  images: node:16-alpine
+  stages: test
+  scripts:
+    - yarn global add serve
+    - apk add curl
+    - serve -s build &
+    - sleep 10
+    - curl http://localhost:3000 | grep "React App"     #grep download the page source
+
+deploy to staging:
+  images: 
+    name: amazon/aws-cli:2.4.2
+    entrypoint: [""]
+  environment: staging
+  stage: deploy staging
+  rules:
+    - if: $CI_COMMIT_BRANCH_NAME == $CI_DEFAULT_BRANCH
+  script:
+    - aws --version
+    - $CI_COMMIT_BRANCH_NAME    #for debugging purposes to see the gitlab variable, nothing serious
+    - aws s3 sync build s3://$AWS_S3_BUCKET_STAGING --delete 
+    - curl $APP_BASE_URL_STAGING | grep "React App"
+    
+
+deploy to s3:
+  stage: deploy production
+  images: 
+    name: amazon/aws-cli:2.4.2
+    entrypoint: [""]
+  environment: production
+  rules:
+    - if: $CI_COMMIT_BRANCH_NAME == $CI_DEFAULT_BRANCH    #using gitlab variable
+  scripts:
+    - aws --version
+    - $CI_COMMIT_BRANCH_NAME    #for debugging purposes to see the gitlab variable, nothing serious
+    - aws s3 sync build s3://$AWS_S3_BUCKET --delete
+    - curl $APP_BASE_URL | grep "React App" 
+  

@@ -1,0 +1,28 @@
+# Frontend Project
+# clone the project and run in dev to be sure apo is working; Now lets create a pipeline to build, test and integrate with SCM & deploy
+stages:
+  - build
+  - test
+
+build website:
+  image: node:16-alpine             #use a suitable image thatrun run the command, make sure image is as small as possible
+  stage: build
+  script:
+    - yarn install
+    - yarn build
+    - test -f build/index.html
+  artifacts:
+    paths:
+      - build
+
+test website:
+  image: alpine             #use a suitable image thatrun run the command, make sure image is as small as possible
+  stage: test
+  script:
+    - test -f build/index.html
+
+unit tests:
+  image: node:16-alpine
+  stage: test
+  script:
+    - yarn test

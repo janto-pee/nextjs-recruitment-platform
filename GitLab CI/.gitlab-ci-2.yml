@@ -1,0 +1,51 @@
+stages:
+  - build
+  - test
+
+build laptop:
+  image: alpine
+  stage: build
+  script: 
+    - echo "Buildinga laptop"
+    - mkdir build
+    - touch build/computer.txt
+    - echo "Mainboard" >> build/computer.txt
+    - cat build/computer.txt
+    - echo "Keyboard" >> build/computer.txt
+    - cat build/computer.txt
+
+test laptop:
+  image: alpine
+  stage: test
+  script:
+    - test -f build/computer.txt
+
+# why pipeline fail
+# Testjob fails because it couldn'texecute the script.
+# The build/computer.txt was deleted as soon as the build job was completed. Therefore we need to save itas artifact
+
+
+stages2:
+  - build
+  - test
+
+build laptop2:
+  image: alpine
+  stage: build
+  script: 
+    - echo "Buildinga laptop"
+    - mkdir build
+    - touch build/computer.txt
+    - echo "Mainboard" >> build/computer.txt
+    - cat build/computer.txt
+    - echo "Keyboard" >> build/computer.txt
+    - cat build/computer.txt
+  artifacts:
+    paths:
+      - build
+
+test laptop2:                 #remove all 2 at top level
+  image: alpine
+  stage: test
+  script:
+    - test -f build/computer.txt
