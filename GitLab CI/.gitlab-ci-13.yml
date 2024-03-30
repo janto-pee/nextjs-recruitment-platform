@@ -48,3 +48,5 @@ deployto production:
     name: amazon/aws-cli:2.4.2
     entrypoint: [""]
   environment: production
+
+  # we need to provide some file to s3 as temmplates
