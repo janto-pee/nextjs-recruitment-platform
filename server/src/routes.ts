@@ -1,75 +1,78 @@
 import { JobController } from "./controller/JobController";
+import { PersonController } from "./controller/PersonController";
 import { UserController } from "./controller/UserController";
 
 export const Routes = [
   {
     method: "post",
-    route: "/users",
-    controller: UserController,
+    route: "/api/persons",
+    controller: PersonController,
     action: "createPerson",
   },
+  // person
   {
     method: "post",
-    route: "/users",
-    controller: UserController,
+    route: "/api/persons/:id/:verificationcode",
+    controller: PersonController,
     action: "verifyPerson",
   },
   {
     method: "post",
-    route: "/users",
-    controller: UserController,
+    route: "/api/persons/forgotpassword",
+    controller: PersonController,
     action: "forgotPassword",
   },
-
   {
     method: "post",
-    route: "/users",
-    controller: UserController,
+    route: "/api/persons/resetpassword/:id/:passwordresetcode",
+    controller: PersonController,
     action: "resetPassword",
   },
-
   {
     method: "post",
-    route: "/users",
+    route: "/api/persons/me",
     controller: UserController,
     action: "accessAccount",
+    // getcurrentuser
   },
+
+  //
 
   {
     method: "post",
-    route: "/users",
-    controller: UserController,
+    route: "/api/session",
+    controller: SessionC,
     action: "currentPerson",
   },
 
   {
     method: "post",
-    route: "/users",
+    route: "/api/session",
     controller: UserController,
     action: "updatePerson",
   },
 
   {
     method: "get",
-    route: "/jobs",
+    route: "/api/jobs",
     controller: JobController,
     action: "allJob",
   },
   {
     method: "get",
-    route: "/jobs/:id",
+    route: "/api/jobs/:id",
     controller: JobController,
     action: "oneJob",
   },
   {
     method: "put",
-    route: "/jobs",
+    route: "/api/jobs",
     controller: JobController,
     action: "updatePerson",
   },
   {
     method: "delete",
-    route: "/jobs/:id",
+    route: "/api/jobs/:id",
     controller: JobController,
     action: "removeJob",
   },
@@ -80,25 +83,25 @@ export const Routes = [
 
   {
     method: "get",
-    route: "/users",
+    route: "/api/users",
     controller: UserController,
     action: "all",
   },
   {
     method: "get",
-    route: "/users/:id",
+    route: "/api/users/:id",
     controller: UserController,
     action: "one",
   },
   {
     method: "post",
-    route: "/users",
+    route: "/api/users",
     controller: UserController,
     action: "save",
   },
   {
     method: "delete",
-    route: "/users/:id",
+    route: "/api/users/:id",
     controller: UserController,
     action: "remove",
   },
@@ -107,7 +110,7 @@ export const Routes = [
 
   {
     method: "delete",
-    route: "/users/:id",
+    route: "/api/users/:id",
     controller: UserController,
     action: "remove",
   },
